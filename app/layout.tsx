@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/layout/header";
+import TopBar from "@/components/layout/topbar/topbar";
+import PlayerBar from "@/components/layout/player-bar/player-bar";
+import Sidebar from "@/components/layout/sidebar/sidebar";
 
 const inter = Inter({
    variable: "--font-inter",
@@ -21,8 +23,12 @@ export default function RootLayout({
    return (
       <html lang="en">
          <body className={`${inter.variable} antialiased`}>
-            <Header />
-            {children}
+            <TopBar />
+            <div className="flex gap-5">
+               <Sidebar />
+               {children}
+            </div>
+            <PlayerBar />
          </body>
       </html>
    );
