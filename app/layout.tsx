@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import TopBar from "@/components/layout/topbar/topbar";
 import PlayerBar from "@/components/layout/player-bar/player-bar";
 import Sidebar from "@/components/layout/sidebar/sidebar";
+import SignUpBar from "@/components/layout/signup-bar/signup-bar";
 
 const inter = Inter({
    variable: "--font-inter",
@@ -23,12 +25,15 @@ export default function RootLayout({
    return (
       <html lang="en">
          <body className={`${inter.variable} antialiased`}>
-            <TopBar />
-            <div className="flex gap-5">
-               <Sidebar />
-               {children}
+            <div className="flex flex-col gap-3 mx-3 h-screen overflow-hidden">
+               <TopBar />
+               <div className="flex flex-1 gap-2">
+                  <Sidebar />
+                  {children}
+               </div>
+               <PlayerBar />
+               {/* <SignUpBar /> */}
             </div>
-            <PlayerBar />
          </body>
       </html>
    );

@@ -19,7 +19,7 @@ import Image from "next/image";
 
 export default function PlayerBar() {
    return (
-      <footer className="w-full h-[90px] bg-black border-t border-neutral-800 flex items-center justify-between px-4">
+      <footer className="w-full h-10 pt-2 pb-4 bg-black border-t border-neutral-800 flex items-center justify-between px-4 box-border mb-5">
          {/* LEFT: Song info */}
          <div className="flex items-center gap-3 w-[30%]">
             <Image
