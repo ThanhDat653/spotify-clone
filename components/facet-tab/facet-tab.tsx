@@ -67,10 +67,8 @@ function FacetContent() {
     return (
         <div className="mt-6">
             <h1 className="mb-4 pl-3 text-3xl font-bold">{label}</h1>
-            <div className="mb-5 flex-1">
-                <div className="grid grid-cols-4">
-                    <TrackItem />
-                    <TrackItem />
+            <div className="mb-5 flex-1 pl-3">
+                <div className="grid grid-cols-3 gap-x-3 gap-y-1">
                     <TrackItem />
                     <TrackItem />
                     <TrackItem />
