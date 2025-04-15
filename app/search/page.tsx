@@ -1,12 +1,13 @@
 import React from 'react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Card, CardImage, CardTitle } from '@/components/ui/card'
 import PlayTrackButton from '@/components/button/play-track-button'
 import TrackItem from '@/components/track-item'
 
 function Page() {
     return (
-        <div className="bg-base w-full rounded-xl">
+        <div className="bg-base w-full rounded-md">
             {/* Fixed Header */}
             <div className=""></div>
             {/* Content */}
@@ -43,6 +44,19 @@ function Page() {
                             <TrackItem />
                             <TrackItem />
                             <TrackItem />
+                        </div>
+                    </div>
+                </div>
+                <div className="mt-[83px] flex flex-col">
+                    <div className="mb-2">
+                        <p className="text-2xl font-bold text-white">
+                            Kết quả hàng đầu
+                        </p>
+                        <div className="flex">
+                            <Card>
+                                <CardImage src="2thuhieu.jpg" />
+                                <CardTitle>HIEUTHUHAI</CardTitle>
+                            </Card>
                         </div>
                     </div>
                 </div>
