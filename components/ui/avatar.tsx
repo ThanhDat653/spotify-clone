@@ -67,4 +67,19 @@ function AvatarFallback({
     )
 }
 
+// function ThumbnailPlaylist({
+//     className,
+//     ...props
+// }: React.ComponentProps<typeof AvatarPrimitive.Image>) {
+//     return (
+//         // eslint-disable-next-line @next/next/no-img-element
+//         <img
+//             src={'/thumbnail.jpg'}
+//             alt="thumnail"
+//             className={cn(avatarVariants({ size, className }))}
+//             {...props}
+//         />
+//     )
+// }
+
 export { Avatar, AvatarImage, AvatarFallback }
