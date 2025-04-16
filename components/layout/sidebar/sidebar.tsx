@@ -1,9 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { BookOpen, Heart, Home, Music2, Search, Users } from 'lucide-react'
 
-const Sidebar = () => {
+import { cn } from '@/lib/utils'
+import { ResizablePanel } from '@/components/ui/resizable'
+
+const Sidebar = ({
+    className,
+    ...props
+}: React.ComponentProps<typeof ResizablePanel>) => {
     return (
-        <div className="bg-base flex h-full w-80 flex-col rounded-md px-3 py-4 text-white">
+        <ResizablePanel
+            className={cn(
+                'bg-base flex h-full w-80 flex-col rounded-md px-3 py-4 text-white',
+                className
+            )}
+            {...props}
+        >
             {/* Logo hoặc tiêu đề */}
             <div className="mb-6 ml-2 text-sm font-bold">Your Library</div>
             {/* Navigation Menu */}
@@ -21,7 +33,7 @@ const Sidebar = () => {
                     key={'browse-podcasts'}
                 />
             </div>
-        </div>
+        </ResizablePanel>
     )
 }
 

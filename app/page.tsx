@@ -7,7 +7,7 @@ import TrackItem from '@/components/track-item'
 
 export default function HomePage() {
     return (
-        <div className="bg-base relative rounded p-4 pt-0">
+        <div className="bg-base relative rounded-md p-4 pt-0">
             <FacetTabs />
             <div className="mt-6">
                 <Suspense fallback={<div>Loading...</div>}>

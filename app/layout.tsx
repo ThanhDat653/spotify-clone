@@ -1,19 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import localFont from 'next/font/local'
 
 import './globals.css'
 
 import StoreProvider from '@/redux/store-provider'
 
+import {
+    ResizableHandle,
+    ResizablePanel,
+    ResizablePanelGroup,
+} from '@/components/ui/resizable'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import MainLayout from '@/components/layout/main-layout'
 import PlayerBar from '@/components/layout/player-bar/player-bar'
 import Sidebar from '@/components/layout/sidebar/sidebar'
 import SignUpBar from '@/components/layout/signup-bar/signup-bar'
 import TopBar from '@/components/layout/topbar/topbar'
+import TrackPreview from '@/components/layout/track-preview'
 
-const inter = Inter({
-    variable: '--font-inter',
-    subsets: ['latin'],
+const spotifyMix = localFont({
+    src: '/font/SpotifyMix-Regular.woff2',
 })
 
 export const metadata: Metadata = {
@@ -28,27 +35,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`${inter.variable} antialiased`}>
+            <body className={`${spotifyMix.className} antialiased`}>
                 <StoreProvider>
-                    <div className="mx-3 flex h-screen flex-col gap-3">
-                        {/* Fixed height */}
-                        <div className="h-16">
-                            <TopBar />
-                        </div>
-
-                        {/* Main content takes remaining height */}
-                        <div className="flex flex-1 gap-2 overflow-hidden">
-                            <Sidebar />
-                            <div className="flex-1 overflow-y-auto">
-                                {children}
-                            </div>
-                        </div>
-
-                        {/* Fixed height */}
-                        <div className="h-20">
-                            <PlayerBar />
-                        </div>
-                    </div>
+                    <MainLayout>{children}</MainLayout>
                 </StoreProvider>
             </body>
         </html>

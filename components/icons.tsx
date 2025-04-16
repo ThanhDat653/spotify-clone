@@ -1,4 +1,4 @@
-import { LucideIcon, LucideProps } from 'lucide-react'
+import { LucideIcon, LucideProps, SquarePlay } from 'lucide-react'
 
 export type Icon = LucideIcon
 
@@ -32,4 +32,6 @@ export const Icons = {
             <path d="M17 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" />
         </svg>
     ),
+
+    squarePlay: SquarePlay,
 }
