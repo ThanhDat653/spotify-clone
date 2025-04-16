@@ -14,8 +14,9 @@ import {
     Shuffle,
     SkipBack,
     SkipForward,
-    Volume2,
 } from 'lucide-react'
+
+import VolumeControl from './volume-control'
 
 export default function PlayerBar() {
     return (
@@ -86,10 +87,7 @@ export default function PlayerBar() {
                     <MonitorSpeaker size={18} />
                 </button>
                 <div className="flex w-24 items-center gap-1">
-                    <Volume2 size={18} />
-                    <div className="h-1 w-full overflow-hidden rounded-full bg-neutral-700">
-                        <div className="h-full w-[80%] bg-white" />
-                    </div>
+                    <VolumeControl />
                 </div>
                 <button className="hover:text-white">
                     <Maximize2 size={18} />
