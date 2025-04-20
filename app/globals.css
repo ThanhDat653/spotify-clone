@@ -45,6 +45,7 @@
     --color-primary: #1ed760;
     --color-highlight: #f0f0f0;
     --color-scrollbar-handle-bg: hsla(0, 0%, 100%, 0.3);
+    --color-subdued: #b3b3b3;
 }
 
 * {
