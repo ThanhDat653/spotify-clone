@@ -2,6 +2,8 @@
 
 import React from 'react'
 
+import { useRedux } from '@/hooks/use-redux'
+
 import {
     ResizableHandle,
     ResizablePanel,
@@ -23,11 +25,14 @@ function ResizableMainLayout({
     children,
     defaultLayout = [15, 70, 15],
 }: IResizableMainLayoutProps) {
+    const { appSelector } = useRedux()
+    const { previewTrack } = appSelector((state) => state.app)
     const onLayout = (sizes: number[]) => {
         document.cookie = `react-resizable-panels:layout=${JSON.stringify(sizes)}`
     }
+
     return (
-        <div className="mx-2 flex h-screen flex-col gap-3">
+        <div className="mx-2 flex h-screen flex-col gap-1">
             {/* Fixed height */}
             <div className="h-16">
                 <TopBar />
@@ -43,16 +48,22 @@ function ResizableMainLayout({
                         minSize={30}
                         className="h-full flex-1"
                     >
-                        <ScrollArea className="h-full">{children}</ScrollArea>
+                        <ScrollArea className="bg-base h-full rounded-md">
+                            {children}
+                        </ScrollArea>
                     </ResizablePanel>
 
-                    <ResizableHandle />
+                    {previewTrack && (
+                        <>
+                            <ResizableHandle />
 
-                    <TrackPreview
-                        defaultValue={defaultLayout[2]}
-                        maxSize={22.5}
-                        minSize={15}
-                    />
+                            <TrackPreview
+                                defaultValue={defaultLayout[2]}
+                                maxSize={22.5}
+                                minSize={15}
+                            />
+                        </>
+                    )}
                 </div>
             </ResizablePanelGroup>
 

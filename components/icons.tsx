@@ -1,9 +1,12 @@
 import {
+    Clock3,
     Ellipsis,
     LucideIcon,
     LucideProps,
     PanelRightClose,
     Plus,
+    PlusCircle,
+    Shuffle,
     SquarePlay,
 } from 'lucide-react'
 
@@ -188,8 +191,98 @@ export const Icons = {
             <path d="M6.962 5.47a.75.75 0 0 1 0 1.06L4.992 8.5l1.97 1.97a.75.75 0 1 1-1.06 1.06L2.87 8.5 5.9 5.47a.75.75 0 0 1 1.061 0zm2.076 0a.75.75 0 0 0 0 1.06l1.97 1.97-1.97 1.97a.75.75 0 1 0 1.06 1.06L13.13 8.5 10.1 5.47a.75.75 0 0 0-1.061 0z"></path>
         </svg>
     ),
+
+    skipForward: ({ className, ...props }: LucideProps) => (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            focusable="false"
+            data-prefix="fab"
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            className={cn('text-subdued', className)}
+            {...props}
+        >
+            <path d="M12.7 1a.7.7 0 0 0-.7.7v5.15L2.05 1.107A.7.7 0 0 0 1 1.712v12.575a.7.7 0 0 0 1.05.607L12 9.149V14.3a.7.7 0 0 0 .7.7h1.6a.7.7 0 0 0 .7-.7V1.7a.7.7 0 0 0-.7-.7h-1.6z"></path>
+        </svg>
+    ),
+    skipBack: ({ className, ...props }: LucideProps) => (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            focusable="false"
+            data-prefix="fab"
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            className={cn('text-subdued', className)}
+            {...props}
+        >
+            <path d="M3.3 1a.7.7 0 0 1 .7.7v5.15l9.95-5.744a.7.7 0 0 1 1.05.606v12.575a.7.7 0 0 1-1.05.607L4 9.149V14.3a.7.7 0 0 1-.7.7H1.7a.7.7 0 0 1-.7-.7V1.7a.7.7 0 0 1 .7-.7h1.6z"></path>
+        </svg>
+    ),
+
+    canvas: ({ className, ...props }: LucideProps) => (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            focusable="false"
+            data-prefix="fab"
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            className={cn(className)}
+            {...props}
+        >
+            <path d="M11.196 8 6 5v6l5.196-3z"></path>
+            <path d="M15.002 1.75A1.75 1.75 0 0 0 13.252 0h-10.5a1.75 1.75 0 0 0-1.75 1.75v12.5c0 .966.783 1.75 1.75 1.75h10.5a1.75 1.75 0 0 0 1.75-1.75V1.75zm-1.75-.25a.25.25 0 0 1 .25.25v12.5a.25.25 0 0 1-.25.25h-10.5a.25.25 0 0 1-.25-.25V1.75a.25.25 0 0 1 .25-.25h10.5z"></path>
+        </svg>
+    ),
+    resize: ({ className, ...props }: LucideProps) => (
+        <svg
+            className={cn('text-subdued', className)}
+            width="9"
+            height="9"
+            viewBox="0 0 9 9"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            {...props}
+        >
+            <line
+                x1="0.823223"
+                y1="8.82322"
+                x2="8.82322"
+                y2="0.823223"
+                stroke="#727272"
+                stroke-width="0.5"
+            ></line>
+            <line
+                x1="4.82322"
+                y1="8.82322"
+                x2="8.82322"
+                y2="4.82322"
+                stroke="#727272"
+                stroke-width="0.5"
+            ></line>
+        </svg>
+    ),
+    queue: ({ className, ...props }: LucideProps) => (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            focusable="false"
+            data-prefix="fab"
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            className={cn(className)}
+            {...props}
+        >
+            <path d="M15 15H1v-1.5h14V15zm0-4.5H1V9h14v1.5zm-14-7A2.5 2.5 0 0 1 3.5 1h9a2.5 2.5 0 0 1 0 5h-9A2.5 2.5 0 0 1 1 3.5zm2.5-1a1 1 0 0 0 0 2h9a1 1 0 1 0 0-2h-9z"></path>
+        </svg>
+    ),
+    plusCircle: PlusCircle,
+    shuffle: Shuffle,
     ellipsis: Ellipsis,
     squarePlay: SquarePlay,
+    clock3: Clock3,
     panelRightClose: PanelRightClose,
     plus: Plus,
 }

@@ -1,7 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { Volume2, VolumeX } from 'lucide-react' // icon loa
 
-const VolumeControl = () => {
+import { cn } from '@/lib/utils'
+import { Slider } from '@/components/ui/slider'
+
+const VolumeControl = ({
+    className,
+    ...props
+}: React.HTMLAttributes<HTMLDivElement>) => {
     const audioRef = useRef<HTMLAudioElement | null>(null)
     const [volume, setVolume] = useState(0.7) // volume hiện tại
     const [prevVolume, setPrevVolume] = useState(0.7) // lưu lại âm lượng trước khi mute
@@ -24,7 +30,10 @@ const VolumeControl = () => {
     }
 
     return (
-        <div className="flex items-center gap-2">
+        <div
+            className={cn('group/slider flex items-center gap-2', className)}
+            {...props}
+        >
             <button onClick={toggleMute} className="cursor-pointer">
                 {volume === 0 ? (
                     <VolumeX size={18} className="text-white" />
@@ -32,14 +41,12 @@ const VolumeControl = () => {
                     <Volume2 size={18} className="text-white" />
                 )}
             </button>
-            <input
-                type="range"
+            <Slider
+                className="w-[100px]"
+                value={[volume * 100]} // Chuyển đổi volume từ 0-1 sang 0-100
+                onValueChange={(value) => setVolume(value[0] / 100)} // Chuyển đổi ngược lại
                 min={0}
-                max={1}
-                step={0.01}
-                value={volume}
-                onChange={(e) => setVolume(parseFloat(e.target.value))}
-                className="h-[6px] w-28 accent-white"
+                max={100}
             />
         </div>
     )

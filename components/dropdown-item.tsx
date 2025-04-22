@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import {
     Command,
     CommandEmpty,
@@ -89,11 +91,11 @@ function DropdownMenuGoToTrackRadio() {
 
 function DropdownMenuGoToArtists() {
     return (
-        <DropdownMenuItem>
-            <div className="flex items-center gap-2">
+        <DropdownMenuItem asChild>
+            <Link href={'/album/123'} className="flex items-center gap-2">
                 <Icons.artist className="size-4" />
                 <span className="text-[hsla(0,0%,100%,.9)]">Go to Artist</span>
-            </div>
+            </Link>
         </DropdownMenuItem>
     )
 }
