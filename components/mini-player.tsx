@@ -61,6 +61,18 @@ function MiniPlayerContainer({
     useEffect(() => {
         if (pipWindow) {
             cloneStyles(window.document, pipWindow.document)
+            const styleEl = pipWindow?.document.createElement('style')
+            if (styleEl) {
+                styleEl.innerHTML = `
+                * {
+                scrollbar-width: none;
+                        -ms-overflow-style: none;
+
+                }
+                         `
+            }
+
+            pipWindow.document.head.appendChild(styleEl)
         }
     }, [pipWindow])
 
@@ -102,37 +114,38 @@ function MiniPlayer() {
         <>
             <MiniPlayerTrigger onClick={handleClick} />
             <MiniPlayerContainer pipWindow={pipWindow}>
-                <div className="flex min-h-screen flex-col gap-4 px-4 pb-4">
+                <div className="no-scrollbar flex min-h-screen flex-col gap-4 px-4 pb-4">
                     <div className="">
                         <Icons.resize className="size- absolute right-2 bottom-2 text-white" />
                     </div>
-                    <div className="flex flex-1 items-center justify-center">
-                        <div className="aspect-square max-w-[388px] overflow-hidden rounded-lg shadow-[0_12px_32px_0_rgba(0,0,0,.3)]">
+                    <div className="group/pip-thumb relative flex flex-1 items-center justify-center">
+                        <div className="aspect-square w-full max-w-[388px] overflow-hidden rounded-lg shadow-[0_12px_32px_0_rgba(0,0,0,.3)]">
                             <img
                                 className="w-full"
                                 src="/nadtt-canva.jpg"
                                 alt=""
                             />
                         </div>
+                        <div className="absolute top-0 left-0 flex h-full w-full items-center justify-center gap-5 bg-gradient-to-b from-transparent to-black text-neutral-400 opacity-0 transition-all delay-150 ease-in group-hover/pip-thumb:opacity-100">
+                            <button>
+                                <Icons.shuffle className="size-5 hover:cursor-pointer hover:text-white" />
+                            </button>
+                            <button>
+                                <Icons.skipBack className="size-5 hover:cursor-pointer hover:text-white" />
+                            </button>
+                            <button className="flex size-12 items-center justify-center rounded-full bg-white text-black transition hover:scale-105">
+                                {isPlaying ? (
+                                    <Icons.playerPause className="size-6" />
+                                ) : (
+                                    <Icons.playerPlay className="size-6" />
+                                )}
+                            </button>
+                            <button>
+                                <Icons.skipForward className="size-5 hover:cursor-pointer hover:text-white" />
+                            </button>
+                        </div>
                     </div>
-                    <div className="flex items-center gap-5 text-neutral-400">
-                        <button>
-                            <Icons.shuffle className="size-4 hover:cursor-pointer hover:text-white" />
-                        </button>
-                        <button>
-                            <Icons.skipBack className="size-4 hover:cursor-pointer hover:text-white" />
-                        </button>
-                        <button className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-black transition hover:scale-105">
-                            {isPlaying ? (
-                                <Icons.playerPause className="size-5" />
-                            ) : (
-                                <Icons.playerPlay className="size-5" />
-                            )}
-                        </button>
-                        <button>
-                            <Icons.skipForward className="size-4 hover:cursor-pointer hover:text-white" />
-                        </button>
-                    </div>
+
                     <div className="flex items-center justify-between gap-4">
                         <div className="overflow-hidden">
                             <p className="text-2xl leading-6 font-bold text-nowrap">

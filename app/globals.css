@@ -138,3 +138,7 @@
         /* font-family: 'Spotify Mix'; */
     }
 }
+
+@utility no-scrollbar {
+    @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+}
