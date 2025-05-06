@@ -6,14 +6,17 @@ import {
     setIsPlaying,
     setPreviewQueue,
     setPreviewTrack,
+    setRepeatMode,
 } from '@/redux/features/app.slice'
 import {
     Minus,
     // Pause,
     Plus,
     Repeat,
+    Repeat1,
 } from 'lucide-react'
 
+import { cn, formatTime } from '@/lib/utils'
 import { useRedux } from '@/hooks/use-redux'
 import { OptionToggle } from '@/components/ui/option-toggle'
 import { Slider } from '@/components/ui/slider'
@@ -25,31 +28,98 @@ import VolumeControl from './volume-control'
 export default function PlayerBar() {
     const audioRef = useRef<HTMLAudioElement>(null)
     const { appSelector, dispatch } = useRedux()
-    const { previewTrack, isPlaying, previewQueue } = appSelector(
-        (state) => state.app
-    )
+    const {
+        previewTrack,
+        isPlaying,
+        previewQueue,
+        track,
+        volume,
+        isMuted,
+        repeatMode,
+    } = appSelector((state) => state.app)
     const [currentTime, setCurrentTime] = useState(0)
-    const [duration, setDuration] = useState(0)
-    const handleTogglePlay = () => {
-        if (audioRef.current) {
-            if (audioRef.current.paused) {
-                dispatch(setIsPlaying(true))
-                audioRef.current.play()
-            } else {
-                dispatch(setIsPlaying(false))
 
-                audioRef.current.pause()
-            }
-        }
-    }
+    const [progress, setProgress] = useState(0)
+    const [duration, setDuration] = useState(0)
 
     useEffect(() => {
+        audioRef.current = new Audio(track?.url)
+
         if (audioRef.current) {
-            audioRef.current.onloadedmetadata = () => {
-                setDuration(audioRef.current!.duration)
+            audioRef.current.volume = volume / 100
+        }
+
+        const audio = audioRef.current
+
+        const handleTimeUpdate = () => {
+            if (audio) {
+                setCurrentTime(audio.currentTime)
+                setProgress((audio.currentTime / audio.duration) * 100 || 0)
             }
         }
-    }, [])
+
+        const handleLoadedMetadata = () => {
+            if (audio) {
+                setDuration(audio.duration)
+            }
+        }
+
+        const handleEnded = () => {
+            if (repeatMode === 'one') {
+                audio.currentTime = 0
+                audio.play()
+            }
+        }
+
+        audio.addEventListener('timeupdate', handleTimeUpdate)
+        audio.addEventListener('loadedmetadata', handleLoadedMetadata)
+        audio.addEventListener('ended', handleEnded)
+
+        return () => {
+            audio.pause()
+            audio.removeEventListener('timeupdate', handleTimeUpdate)
+            audio.removeEventListener('loadedmetadata', handleLoadedMetadata)
+            audio.removeEventListener('ended', handleEnded)
+        }
+    }, [track?.url, repeatMode, dispatch])
+
+    useEffect(() => {
+        if (!audioRef.current) return
+
+        if (isPlaying) {
+            audioRef.current.play().catch((error) => {
+                console.error('Error playing audio:', error)
+                dispatch(setIsPlaying(false))
+            })
+        } else {
+            audioRef.current.pause()
+        }
+    }, [isPlaying, dispatch])
+
+    useEffect(() => {
+        if (!audioRef.current) return
+
+        audioRef.current.volume = isMuted ? 0 : volume / 100
+    }, [volume, isMuted])
+
+    const togglePlay = () => {
+        dispatch(setIsPlaying(!isPlaying))
+    }
+
+    const handleProgressChange = (value: number[]) => {
+        if (!audioRef.current || !duration) return
+
+        const newTime = (value[0] / 100) * duration
+        audioRef.current.currentTime = newTime
+        setProgress(value[0])
+        setCurrentTime(newTime)
+    }
+
+    const toggleRepeat = () => {
+        if (repeatMode === 'off') dispatch(setRepeatMode('all'))
+        else if (repeatMode === 'all') dispatch(setRepeatMode('one'))
+        else dispatch(setRepeatMode('off'))
+    }
 
     return (
         <footer className="box-border flex w-full items-center justify-between bg-black px-4 py-2">
@@ -87,7 +157,7 @@ export default function PlayerBar() {
                         <Icons.skipBack className="size-4 hover:cursor-pointer hover:text-white" />
                     </button>
                     <button
-                        onClick={handleTogglePlay}
+                        onClick={togglePlay}
                         className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-black transition hover:scale-105"
                     >
                         {isPlaying ? (
@@ -99,58 +169,37 @@ export default function PlayerBar() {
                     <button>
                         <Icons.skipForward className="size-4 hover:cursor-pointer hover:text-white" />
                     </button>
-                    <button>
-                        <Repeat size={18} />
+                    <button
+                        onClick={toggleRepeat}
+                        className={cn('text-neutral-400', {
+                            'text-primary': repeatMode !== 'off',
+                        })}
+                    >
+                        {repeatMode === 'one' ? (
+                            <Repeat1 className="size-5" />
+                        ) : (
+                            <Repeat className="size-5" />
+                        )}
                     </button>
                 </div>
-                <audio
-                    ref={audioRef}
-                    src="/nadtt.mp3"
-                    preload="metadata"
-                    onTimeUpdate={() => {
-                        if (audioRef.current) {
-                            setCurrentTime(audioRef.current.currentTime)
-                        }
-                    }}
-                />
 
                 {/* Progress bar */}
                 <div className="mt-1 flex w-full items-center gap-2 text-xs text-neutral-400">
-                    <span>{currentTime}</span>
+                    <span>{formatTime(currentTime)}</span>
                     <Slider
-                        value={[currentTime]}
+                        value={[progress]}
                         min={0}
-                        max={duration}
+                        max={100}
                         step={1}
-                        onValueChange={(value) => {
-                            setCurrentTime(value[0])
-                            if (audioRef.current) {
-                                audioRef.current.currentTime = value[0]
-                            }
-                        }}
+                        onValueChange={handleProgressChange}
                         className="w-full hover:cursor-pointer"
                     />
-                    <span>{duration}</span>
+                    <span>{formatTime(duration)}</span>
                 </div>
             </div>
 
             {/* RIGHT: Options */}
             <div className="flex w-[30%] items-center justify-end gap-3 text-neutral-400">
-                {/* <button className="hover:text-white">
-                    <Mic size={18} />
-                </button>
-                <button className="hover:text-white">
-                    <LayoutList size={18} className="text-green-500" />
-                </button>
-                <button className="hover:text-white">
-                    <MonitorSpeaker size={18} />
-                </button>
-                <div className="flex items-center gap-1">
-                    <VolumeControl />
-                </div>
-                <button className="hover:text-white">
-                    <Maximize2 size={18} />
-                </button> */}
                 <OptionToggle
                     pressed={previewTrack}
                     onPressedChange={(pressed) => {
