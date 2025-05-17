@@ -28,7 +28,7 @@ const Sidebar = ({
             <div className="mb-6 ml-2 text-sm font-bold">Your Library</div>
             {/* Navigation Menu */}
             <div className="mb-4 flex flex-col gap-4">
-                {isAuthenticated ? (
+                {isAuthenticated && user!.playlists.length ? (
                     <>
                         {user!.playlists.map((playlist) => (
                             <SidebarPlaylist

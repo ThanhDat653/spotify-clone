@@ -7,6 +7,7 @@ import {
     useEffect,
     useState,
 } from 'react'
+import { setIsPlaying } from '@/redux/features/app.slice'
 import { createPortal } from 'react-dom'
 
 import { useRedux } from '@/hooks/use-redux'
@@ -44,8 +45,8 @@ function MiniPlayerTrigger({
     ...props
 }: ButtonHTMLAttributes<HTMLButtonElement>) {
     return (
-        <button className="" {...props}>
-            Test
+        <button className="self-start" {...props}>
+            <Icons.miniPlayer className="text-subdued size-4" />
         </button>
     )
 }
@@ -108,8 +109,8 @@ function MiniPlayer() {
     }, [pipWindow])
 
     const { appSelector, dispatch } = useRedux()
-    const { isPlaying } = appSelector((state) => state.app)
-
+    const { isPlaying, track } = appSelector((state) => state.app)
+    const togglePlay = () => dispatch(setIsPlaying(!isPlaying))
     return (
         <>
             <MiniPlayerTrigger onClick={handleClick} />
@@ -122,7 +123,7 @@ function MiniPlayer() {
                         <div className="aspect-square w-full max-w-[388px] overflow-hidden rounded-lg shadow-[0_12px_32px_0_rgba(0,0,0,.3)]">
                             <img
                                 className="w-full"
-                                src="/nadtt-canva.jpg"
+                                src={`${process.env.NEXT_PUBLIC_MEDIA_URL}${track?.thumbnail}`}
                                 alt=""
                             />
                         </div>
@@ -133,7 +134,10 @@ function MiniPlayer() {
                             <button>
                                 <Icons.skipBack className="size-5 hover:cursor-pointer hover:text-white" />
                             </button>
-                            <button className="flex size-12 items-center justify-center rounded-full bg-white text-black transition hover:scale-105">
+                            <button
+                                onClick={togglePlay}
+                                className="flex size-12 items-center justify-center rounded-full bg-white text-black transition hover:scale-105"
+                            >
                                 {isPlaying ? (
                                     <Icons.playerPause className="size-6" />
                                 ) : (
@@ -149,10 +153,12 @@ function MiniPlayer() {
                     <div className="flex items-center justify-between gap-4">
                         <div className="overflow-hidden">
                             <p className="text-2xl leading-6 font-bold text-nowrap">
-                                Như Cách Anh Đã Từng Thôi
+                                {track?.title}
                             </p>
                             <span className="text-subdued text-[15px] leading-0 font-bold">
-                                HURRYKNG
+                                {track?.artist
+                                    .map((item) => item.username)
+                                    .join(', ')}
                             </span>
                         </div>
                         <div className="flex items-center">
