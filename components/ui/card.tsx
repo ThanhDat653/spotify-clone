@@ -1,20 +1,20 @@
 import React from 'react'
+import Link from 'next/link'
 import { cva, VariantProps } from 'class-variance-authority'
 
 import { cn } from '@/lib/utils'
 
-import PlayTrackButton from '../button/play-track-button'
-
 type CardProps = {
     orientation?: 'horizontal' | 'vertical'
+    href: string
 }
 
 const Card = React.forwardRef<
     HTMLDivElement,
     React.HTMLAttributes<HTMLDivElement> & CardProps
->(({ className, orientation = 'vertical', ...props }, ref) => (
-    <div
-        ref={ref}
+>(({ className, href, children, orientation = 'vertical' }, ref) => (
+    <Link
+        href={href}
         className={cn(
             'group/track rounded-md p-3 hover:bg-white/10',
             {
@@ -23,8 +23,9 @@ const Card = React.forwardRef<
             },
             className
         )}
-        {...props}
-    />
+    >
+        {children}
+    </Link>
 ))
 Card.displayName = 'Card'
 
@@ -51,13 +52,13 @@ export interface CardImageProps
     extends React.ImgHTMLAttributes<HTMLImageElement>,
         VariantProps<typeof cardImageVariants> {}
 const CardImage = React.forwardRef<HTMLImageElement, CardImageProps>(
-    ({ className, variant, ...props }, ref) => (
+    ({ className, variant, children, ...props }, ref) => (
         <div
             ref={ref}
             className={cn(cardImageVariants({ variant }), className)}
         >
             <img className="bg-center object-cover" {...props} />
-            <PlayTrackButton className="absolute right-2 bottom-2 translate-y-2 opacity-0 transition-all delay-75 ease-in group-hover/track:translate-y-0 group-hover/track:opacity-100" />
+            {children}
         </div>
     )
 )

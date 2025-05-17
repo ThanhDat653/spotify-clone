@@ -1,13 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+
+'use client'
+
+import Link from 'next/link'
 import { BookOpen, Heart, Home, Music2, Search, Users } from 'lucide-react'
 
+import { env } from '@/env.mjs'
 import { cn } from '@/lib/utils'
+import { useRedux } from '@/hooks/use-redux'
 import { ResizablePanel } from '@/components/ui/resizable'
 
 const Sidebar = ({
     className,
     ...props
 }: React.ComponentProps<typeof ResizablePanel>) => {
+    const { appSelector } = useRedux()
+    const { user, isAuthenticated } = appSelector((state) => state.auth)
     return (
         <ResizablePanel
             className={cn(
@@ -20,18 +28,33 @@ const Sidebar = ({
             <div className="mb-6 ml-2 text-sm font-bold">Your Library</div>
             {/* Navigation Menu */}
             <div className="mb-4 flex flex-col gap-4">
-                <FeatSection
-                    buttonLabel="Create playlist"
-                    description="It's easy, we'll help you"
-                    title="Create your first playlist"
-                    key={'create-playlist'}
-                />
-                <FeatSection
-                    buttonLabel="Browse podcasts"
-                    description="We'll keep you updated on new episodes"
-                    title="Let's find some podcasts to follow"
-                    key={'browse-podcasts'}
-                />
+                {isAuthenticated ? (
+                    <>
+                        {user!.playlists.map((playlist) => (
+                            <SidebarPlaylist
+                                id={playlist.id}
+                                name={playlist.name}
+                                poster={`${env.NEXT_PUBLIC_SPOTIFY_BACKEND_URL}${playlist.poster}`}
+                                key={playlist.id}
+                            />
+                        ))}
+                    </>
+                ) : (
+                    <>
+                        <FeatSection
+                            buttonLabel="Create playlist"
+                            description="It's easy, we'll help you"
+                            title="Create your first playlist"
+                            key={'create-playlist'}
+                        />
+                        <FeatSection
+                            buttonLabel="Browse podcasts"
+                            description="We'll keep you updated on new episodes"
+                            title="Let's find some podcasts to follow"
+                            key={'browse-podcasts'}
+                        />
+                    </>
+                )}
             </div>
         </ResizablePanel>
     )
@@ -50,11 +73,22 @@ const SidebarItem = ({
     </div>
 )
 
-const SidebarPlaylist = ({ name }: { name: string }) => (
-    <p className="mb-2 flex cursor-pointer items-center gap-2 hover:text-white">
-        <Music2 size={16} className="text-gray-500" />
+const SidebarPlaylist = ({
+    id,
+    name,
+    poster,
+}: {
+    id: number
+    poster: string
+    name: string
+}) => (
+    <Link
+        href={`/playlist/${id}`}
+        className="mb-2 flex cursor-pointer items-center gap-2 hover:text-white"
+    >
+        <img src={poster} className="size-10 rounded-md" alt="" />
         {name}
-    </p>
+    </Link>
 )
 
 const FeatSection = ({

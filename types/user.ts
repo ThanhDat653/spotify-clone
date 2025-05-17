@@ -1,9 +1,10 @@
 import { IAlbum } from './album'
+import { IPlaylist } from './playlist'
 import { ISong } from './song'
 
 export interface IUser {
-    id: string
-    name: string
+    id: number
+    fullname: string
     avatar: string
     email: string
     createAt: string
@@ -19,4 +20,14 @@ export interface IRole {
 export interface IArtist extends IUser {
     songs: ISong[]
     albums: IAlbum[]
+}
+
+export interface AuthMeResponse {
+    id: number
+    playlists: IPlaylist[]
+    username: string
+    email: string
+    avatar: string
+    role: IRole
+    fullname: string
 }

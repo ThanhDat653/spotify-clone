@@ -1,9 +1,11 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
+import { getCurrentUser } from '@/redux/features/auth.slice'
 
 import { useRedux } from '@/hooks/use-redux'
 
+import { Icons } from '../icons'
 import {
     ResizableHandle,
     ResizablePanel,
@@ -25,12 +27,25 @@ function ResizableMainLayout({
     children,
     defaultLayout = [15, 70, 15],
 }: IResizableMainLayoutProps) {
-    const { appSelector } = useRedux()
+    const { appSelector, dispatch } = useRedux()
+    useEffect(() => {
+        dispatch(getCurrentUser())
+    }, [dispatch])
     const { previewTrack } = appSelector((state) => state.app)
+    const { isLoading } = appSelector((state) => state.auth)
+
     const onLayout = (sizes: number[]) => {
         document.cookie = `react-resizable-panels:layout=${JSON.stringify(sizes)}`
     }
+    console.log(isLoading)
 
+    if (isLoading) {
+        return (
+            <div className="flex h-screen items-center justify-center">
+                <Icons.logo className="text-primary h-10 w-10" />
+            </div>
+        )
+    }
     return (
         <div className="mx-2 flex h-screen flex-col gap-1">
             {/* Fixed height */}

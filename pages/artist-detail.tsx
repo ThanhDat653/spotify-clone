@@ -28,29 +28,27 @@ interface IArtistDetailProps {
 function ArtistDetail({ data }: IArtistDetailProps) {
     const { dispatch, appSelector } = useRedux()
     const { isPlaying, queue } = appSelector((state) => state.app)
-    // const handlePlay = (song: ISong, index: number) => {
-    //     dispatch(setTrack(song))
+    const handlePlay = (song: ISong, index: number) => {
+        dispatch(setTrack(song))
 
-    //     dispatch(
-    //         setQueue({
-    //             track: data.songs,
-    //             playlistId: data.id,
-    //             playlistName: data.name,
-    //         })
-    //     )
-    // }
-    // const handleOnPlaylist = () => {
-    //     dispatch(
-    //         setQueue({
-    //             track: data.songs,
-    //             playlistId: data.id,
-    //             playlistName: data.name,
-    //         })
-    //     )
-    //     dispatch(setTrack(data.songs[0]))
-    // }
-
-    console.log('data', data)
+        dispatch(
+            setQueue({
+                track: data.songs,
+                playlistId: 0,
+                playlistName: data.username,
+            })
+        )
+    }
+    const handleOnPlaylist = () => {
+        dispatch(
+            setQueue({
+                track: data.songs,
+                playlistId: data.id,
+                playlistName: data.fullname,
+            })
+        )
+        dispatch(setTrack(data.songs[0]))
+    }
 
     return (
         <div className="flex flex-col">
@@ -66,7 +64,7 @@ function ArtistDetail({ data }: IArtistDetailProps) {
                     </div>
                     <div className="flex flex-col justify-end gap-2">
                         <span className="text-sm">Artist</span>
-                        <p className="text-5xl font-bold">{data.name}</p>
+                        <p className="text-5xl font-bold">{data.fullname}</p>
                         <div className="flex items-center gap-2">
                             <div className="flex items-center gap-1">
                                 <img
@@ -88,10 +86,10 @@ function ArtistDetail({ data }: IArtistDetailProps) {
                     <div className="flex items-center justify-between p-6">
                         <div className="flex items-center gap-6">
                             <PlayTrackButton
-                            // onClick={handleOnPlaylist}
-                            // isPlaying={
-                            //     queue?.playlistId === data.id && isPlaying
-                            // }
+                                onClick={handleOnPlaylist}
+                                isPlaying={
+                                    queue?.playlistId === data.id && isPlaying
+                                }
                             />
                             <Icons.plusCircle className="text-subdued size-9" />
                             <Icons.ellipsis className="text-subdued size-9" />
@@ -121,32 +119,18 @@ function ArtistDetail({ data }: IArtistDetailProps) {
                                     key={song.id}
                                     song={song}
                                     index={index}
-                                    // onPlay={handlePlay}
+                                    onPlay={handlePlay}
                                 />
                             ))}
-                            {/* <TableRow>
-                                <TableCell className="w-[50px]">1</TableCell>
-                                <TableCell className="flex flex-col gap-1 text-[16px] text-white">
-                                    <p className="text-[16px]">
-                                        Như Anh Đã Từng Thôi
-                                    </p>
-                                    <span className="text-subdued text-[13px] font-semibold">
-                                        HURRYKNG
-                                    </span>
-                                </TableCell>
-                                <TableCell className="w-[50px]">
-                                    <p className="text-subdued">3:00</p>
-                                </TableCell>
-                            </TableRow> */}
                         </TableBody>
                     </Table>
                 </div>
                 <div className="text-subdued mt-6 mb-6 flex flex-col gap-1 px-6 text-sm">
                     <p>December 16, 2024</p>
 
-                    <p>© 2024 HUSTLANG Robber/12 trái lê</p>
+                    <p>© 2024 {data.fullname}</p>
 
-                    <p>℗ 2024 HUSTLANG Robber/12 trái lê</p>
+                    <p>℗ 2024 {data.fullname}</p>
                 </div>
                 <div className="flex flex-col gap-4 px-6 pt-6">
                     <p className="text-2xl font-bold text-white">
@@ -154,10 +138,16 @@ function ArtistDetail({ data }: IArtistDetailProps) {
                     </p>
                     <div className="flex gap-4">
                         {data.albums.map((item) => (
-                            <Card key={item.id} className="w-[200px]">
+                            <Card
+                                key={`album-${item.id}`}
+                                href={`/album/${item.id}`}
+                                className="w-[180px]"
+                            >
                                 <CardImage
                                     src={`${env.NEXT_PUBLIC_MEDIA_URL}${item.poster}`}
-                                />
+                                >
+                                    <PlayTrackButton className="absolute right-2 bottom-2 translate-y-2 opacity-0 transition-all delay-75 ease-in group-hover/track:translate-y-0 group-hover/track:opacity-100" />
+                                </CardImage>
                                 <CardTitle>{item.title}</CardTitle>
                             </Card>
                         ))}
@@ -210,12 +200,12 @@ function SongRow({ song, index, onPlay }: ISongRowProps) {
             </TableCell>
             <TableCell className="flex flex-col gap-1 text-[16px]">
                 <p className="text-[16px]">{song.title}</p>
-                {song.artists.map((artist) => (
+                {song.artist.map((artist) => (
                     <span
                         key={artist.id}
                         className="text-subdued text-[13px] font-semibold"
                     >
-                        {artist.name}
+                        {artist.fullname}
                     </span>
                 ))}
             </TableCell>
