@@ -41,5 +41,9 @@ const ENDPOINTS = {
         CREATE: '/api/artists/',
         UPDATE: (id: string) => `/api/artists/${id}/`,
     },
+    LANDING_PAGE: {
+        GET_PLAYLIST: '/api/landing-page/',
+    },
 }
+
 export default ENDPOINTS

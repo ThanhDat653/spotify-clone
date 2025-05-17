@@ -1,9 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react'
+import { IGenreSong } from '@/types/common'
 
 import { cn } from '@/lib/utils'
 
 import { Icons } from './icons'
+
+interface TrackItemProps {
+    song: IGenreSong
+}
 
 function TrackItem({
     className,

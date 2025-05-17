@@ -1,7 +1,7 @@
 import ENDPOINTS from '@/constants/endpoints'
-import { LoginRespond } from '@/types/common'
+import { LandingResponse, LoginRespond } from '@/types/common'
 
-import { postPublic } from '@/lib/api'
+import { getPublic, postPublic } from '@/lib/api'
 
 export const login = async (payload: {
     username: string
@@ -20,4 +20,8 @@ export const signup = async (payload: {
     return postPublic<LoginRespond>(ENDPOINTS.AUTH.REGISTER, {
         body: payload,
     })
+}
+
+export const landing_playlist = async () => {
+    return getPublic<LandingResponse>(ENDPOINTS.LANDING_PAGE.GET_PLAYLIST)
 }
