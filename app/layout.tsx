@@ -1,29 +1,30 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import Header from "@/components/layout/header";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import type { Metadata } from 'next'
+import localFont from 'next/font/local'
 
-const inter = Inter({
-   variable: "--font-inter",
-   subsets: ["latin"],
-});
+import './globals.css'
+
+import StoreProvider from '@/redux/store-provider'
+
+const spotifyMix = localFont({
+    src: '/font/SpotifyMix-Regular.woff2',
+})
 
 export const metadata: Metadata = {
-   title: "Spotify",
-   description: "Clone by ntdat",
-};
+    title: 'Spotify',
+    description: 'Clone by ntdat',
+}
 
 export default function RootLayout({
-   children,
+    children,
 }: Readonly<{
-   children: React.ReactNode;
+    children: React.ReactNode
 }>) {
-   return (
-      <html lang="en">
-         <body className={`${inter.variable} antialiased`}>
-            <Header />
-            {children}
-         </body>
-      </html>
-   );
+    return (
+        <html lang="en">
+            <body className={`${spotifyMix.className} antialiased`}>
+                <StoreProvider>{children}</StoreProvider>
+            </body>
+        </html>
+    )
 }
