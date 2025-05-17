@@ -133,9 +133,7 @@ function ArtistDetail({ data }: IArtistDetailProps) {
                     <p>℗ 2024 {data.fullname}</p>
                 </div>
                 <div className="flex flex-col gap-4 px-6 pt-6">
-                    <p className="text-2xl font-bold text-white">
-                        More by HURRKNG
-                    </p>
+                    <p className="text-2xl font-bold text-white">Other Album</p>
                     <div className="flex gap-4">
                         {data.albums.map((item) => (
                             <Card

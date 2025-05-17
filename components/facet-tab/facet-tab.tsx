@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
+import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { setTrack } from '@/redux/features/app.slice'
 import { IGenreSong, ILandingResponse } from '@/types/common'
 
 import { env } from '@/env.mjs'
 import { cn } from '@/lib/utils'
+import { useRedux } from '@/hooks/use-redux'
 import { Button } from '@/components/ui/button'
 
 import ShelfPlaylist from '../component-shelf/shelf-playlist'
@@ -114,7 +117,10 @@ function FacetContent(data: FacetContentProps) {
 }
 
 function TrackItem({ song }: TrackItemProps) {
+    const { dispatch } = useRedux()
+
     const searchParams = useSearchParams()
+
     const facet = (searchParams ?? new URLSearchParams()).get('facet')
 
     const labelMap: Record<string, string> = {
@@ -124,7 +130,8 @@ function TrackItem({ song }: TrackItemProps) {
     const label = facet ? labelMap[facet] || 'Unknown' : 'All'
 
     return (
-        <div
+        <Link
+            href={`/track/${song.id}`}
             className={cn(
                 'group/track flex h-[54px] cursor-pointer items-center justify-between rounded-sm pl-2 hover:bg-white/10'
             )}
@@ -132,7 +139,13 @@ function TrackItem({ song }: TrackItemProps) {
             <div className="flex items-center gap-1">
                 <div className="relative size-10 overflow-hidden rounded-sm">
                     <div className="absolute top-0 right-0 bottom-0 left-0 hidden items-center justify-center bg-black/40 group-hover/track:flex">
-                        <Icons.playerPlay className="size-5 text-white" />
+                        <Icons.playerPlay
+                            onClick={() => {
+                                //@ts-expect-error same
+                                dispatch(setTrack(song))
+                            }}
+                            className="size-5 text-white"
+                        />
                     </div>
                     <img
                         className=""
@@ -149,7 +162,7 @@ function TrackItem({ song }: TrackItemProps) {
                     </span>
                 </div>
             </div>
-        </div>
+        </Link>
     )
 }
 

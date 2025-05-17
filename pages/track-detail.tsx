@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import React from 'react'
@@ -10,6 +11,23 @@ import { env } from '@/env.mjs'
 import { useRedux } from '@/hooks/use-redux'
 import PlayTrackButton from '@/components/button/play-track-button'
 import { Icons } from '@/components/icons'
+
+const downloadSong = async (audioUrl: string, filename: string) => {
+    try {
+        const response = await fetch(audioUrl)
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = filename
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 interface ITrackDetailProps {
     data: ISong
@@ -51,7 +69,15 @@ function TrackDetail({ data }: ITrackDetailProps) {
                                     alt=""
                                 /> */}
                                 <p className="text-sm font-bold">
-                                    {data.artist[0].username}
+                                    {data.artist.map((artist) => (
+                                        <Link
+                                            href={`/artist/${artist.id}`}
+                                            key={artist.id}
+                                            className="text-sm font-bold"
+                                        >
+                                            {artist.username},
+                                        </Link>
+                                    ))}
                                 </p>
                             </div>
                             <p className="text-subdued text-sm font-semibold opacity-90">
@@ -70,7 +96,7 @@ function TrackDetail({ data }: ITrackDetailProps) {
                                 }
                             />
                             <Icons.plusCircle className="text-subdued size-9" />
-                            <a
+                            {/* <a
                                 href={`${env.NEXT_PUBLIC_MEDIA_URL}${data.url}`}
                                 download={data.title}
                                 target="_blank"
@@ -78,7 +104,21 @@ function TrackDetail({ data }: ITrackDetailProps) {
                                 className="text-subdued flex size-9 items-center"
                             >
                                 <CircleArrowDown className="size-9" />
-                            </a>
+                            </a> */}
+                            <button
+                                type="button"
+                                className="text-subdued flex size-9 items-center"
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    downloadSong(
+                                        `${env.NEXT_PUBLIC_MEDIA_URL}${data.url}`,
+                                        `${data.title}.mp3`
+                                    )
+                                }}
+                                title="Tải về bài hát"
+                            >
+                                <CircleArrowDown className="size-9" />
+                            </button>
                         </div>
                         <div className="">
                             <span className="text-subdued text-sm">List</span>

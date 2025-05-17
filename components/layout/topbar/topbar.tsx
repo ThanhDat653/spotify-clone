@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { logoutAction } from '@/actions/common'
 import { clearAuth } from '@/redux/features/auth.slice'
 import { Bell, ChevronLeft, ChevronRight, Search, Users } from 'lucide-react'
@@ -17,6 +18,7 @@ import {
 export default function TopBar() {
     const { appSelector, dispatch } = useRedux()
     const { isAuthenticated, user } = appSelector((state) => state.auth)
+    const router = useRouter()
 
     return (
         <header className="flex h-fit items-center justify-between bg-black pt-3">
@@ -24,10 +26,16 @@ export default function TopBar() {
             <div className="flex items-center gap-2">
                 {/* Back / Forward: chỉ hiện trên md trở lên */}
                 <div className="hidden items-center gap-1 md:flex">
-                    <button className="p-2 hover:cursor-pointer">
+                    <button
+                        className="p-2 hover:cursor-pointer"
+                        onClick={() => router.back()}
+                    >
                         <ChevronLeft size={20} />
                     </button>
-                    <button className="p-2 hover:cursor-pointer">
+                    <button
+                        className="p-2 hover:cursor-pointer"
+                        onClick={() => router.forward()}
+                    >
                         <ChevronRight size={20} />
                     </button>
                 </div>
