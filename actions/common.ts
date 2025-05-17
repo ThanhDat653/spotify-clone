@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { login } from '@/service/common'
+import { login, signup } from '@/service/common'
 
 import { loginSchema, signupSchema } from '@/lib/validations/common'
 
@@ -76,6 +76,8 @@ export const signupAction = async (
             fields: safeParse.data,
         }
     }
+    const data = await signup(safeParse.data)
+
     try {
     } catch (error) {
         console.error('Error during signup action:', error)
@@ -83,4 +85,11 @@ export const signupAction = async (
             message: 'An error occurred during signup. Please try again.',
         }
     }
+    redirect('/login')
+}
+
+export const logoutAction = async () => {
+    const allCookies = await cookies()
+    allCookies.delete('_session')
+    redirect('/')
 }

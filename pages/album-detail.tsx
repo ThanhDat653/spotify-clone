@@ -2,14 +2,12 @@
 
 import { setQueue, setTrack } from '@/redux/features/app.slice'
 import { IAlbum } from '@/types/album'
-import { IPlaylist } from '@/types/playlist'
 import { ISong } from '@/types/song'
 
 import { env } from '@/env.mjs'
 import { formatTime } from '@/lib/utils'
 import { useRedux } from '@/hooks/use-redux'
 import { Button } from '@/components/ui/button'
-import { Card, CardImage, CardTitle } from '@/components/ui/card'
 import {
     Table,
     TableBody,
@@ -26,7 +24,8 @@ interface IAlbumDetailProps {
 }
 
 function AlbumDetail({ data }: IAlbumDetailProps) {
-    const { dispatch } = useRedux()
+    const { dispatch, appSelector } = useRedux()
+    const { isPlaying, queue } = appSelector((state) => state.app)
 
     const handlePlay = (song: ISong, index: number) => {
         dispatch(setTrack(song))
@@ -38,6 +37,16 @@ function AlbumDetail({ data }: IAlbumDetailProps) {
                 playlistName: data.title,
             })
         )
+    }
+    const handleOnPlaylist = () => {
+        dispatch(
+            setQueue({
+                track: data.songs,
+                playlistId: data.id,
+                playlistName: data.title,
+            })
+        )
+        dispatch(setTrack(data.songs[0]))
     }
 
     return (
@@ -75,7 +84,12 @@ function AlbumDetail({ data }: IAlbumDetailProps) {
                 <div className="flex flex-col">
                     <div className="flex items-center justify-between p-6">
                         <div className="flex items-center gap-6">
-                            <PlayTrackButton />
+                            <PlayTrackButton
+                                onClick={handleOnPlaylist}
+                                isPlaying={
+                                    queue?.playlistId === data.id && isPlaying
+                                }
+                            />
                             <Icons.plusCircle className="text-subdued size-9" />
                             <Icons.ellipsis className="text-subdued size-9" />
                         </div>
@@ -130,61 +144,6 @@ function AlbumDetail({ data }: IAlbumDetailProps) {
 
                     <p>℗ 2024 {data.creator.username}</p>
                 </div> */}
-                <div className="flex flex-col gap-4 px-6 pt-6">
-                    <p className="text-2xl font-bold text-white">
-                        More by HURRKNG
-                    </p>
-                    <div className="flex gap-4">
-                        <Card>
-                            <CardImage src="/2thuhieu.jpg" />
-                            <CardTitle>HIEUTHUHAI</CardTitle>
-                        </Card>
-                        <Card>
-                            <CardImage src="/2thuhieu.jpg" />
-                            <CardTitle>HIEUTHUHAI</CardTitle>
-                        </Card>
-                        <Card>
-                            <CardImage src="/2thuhieu.jpg" />
-                            <CardTitle>HIEUTHUHAI</CardTitle>
-                        </Card>
-                        <Card>
-                            <CardImage src="/2thuhieu.jpg" />
-                            <CardTitle>HIEUTHUHAI</CardTitle>
-                        </Card>
-                        <Card>
-                            <CardImage src="/2thuhieu.jpg" />
-                            <CardTitle>HIEUTHUHAI</CardTitle>
-                        </Card>
-                        <Card>
-                            <CardImage src="/2thuhieu.jpg" />
-                            <CardTitle>HIEUTHUHAI</CardTitle>
-                        </Card>
-                        <Card>
-                            <CardImage src="/2thuhieu.jpg" />
-                            <CardTitle>HIEUTHUHAI</CardTitle>
-                        </Card>
-                        <Card>
-                            <CardImage src="/2thuhieu.jpg" />
-                            <CardTitle>HIEUTHUHAI</CardTitle>
-                        </Card>
-                        <Card>
-                            <CardImage src="/2thuhieu.jpg" />
-                            <CardTitle>HIEUTHUHAI</CardTitle>
-                        </Card>
-                        <Card>
-                            <CardImage src="/2thuhieu.jpg" />
-                            <CardTitle>HIEUTHUHAI</CardTitle>
-                        </Card>
-                        <Card>
-                            <CardImage src="/2thuhieu.jpg" />
-                            <CardTitle>HIEUTHUHAI</CardTitle>
-                        </Card>
-                        <Card>
-                            <CardImage src="/2thuhieu.jpg" />
-                            <CardTitle>HIEUTHUHAI</CardTitle>
-                        </Card>
-                    </div>
-                </div>
             </div>
         </div>
     )
@@ -226,7 +185,7 @@ function SongRow({ song, index, onPlay }: ISongRowProps) {
                         key={artist.id}
                         className="text-subdued text-[13px] font-semibold"
                     >
-                        {artist.name}
+                        {artist.fullname}
                     </span>
                 ))}
             </TableCell>

@@ -18,7 +18,10 @@ export const signup = async (payload: {
     password: string
 }) => {
     return postPublic<LoginRespond>(ENDPOINTS.AUTH.REGISTER, {
-        body: payload,
+        body: {
+            ...payload,
+            role: 2,
+        },
     })
 }
 
