@@ -22,6 +22,7 @@ function SignUpForm() {
             username: '',
             email: '',
             password: '',
+            fullname: '',
             confirmPassword: '',
         },
     })
@@ -55,6 +56,25 @@ function SignUpForm() {
                             <FormItem>
                                 <Label className="flex flex-col items-start gap-2 text-white">
                                     <span className="font-bold">Username</span>
+                                </Label>
+
+                                <FormControl>
+                                    <Input
+                                        {...field}
+                                        placeholder="Enter your username"
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        name="fullname"
+                        control={form.control}
+                        render={({ field }) => (
+                            <FormItem>
+                                <Label className="flex flex-col items-start gap-2 text-white">
+                                    <span className="font-bold">Full name</span>
                                 </Label>
 
                                 <FormControl>
