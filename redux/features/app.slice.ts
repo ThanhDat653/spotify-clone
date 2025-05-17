@@ -1,37 +1,35 @@
+import { ISong } from '@/types/song'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface IAppState {
-    track: {
-        id: string
-        name: string
-        artists: string[]
-        image: string
-        duration: number
-        url: string
-    } | null
+    track: ISong | null
     isPlaying: boolean
     isMuted: boolean
+    isShuffle: boolean
     repeatMode: 'off' | 'one' | 'all'
     volume: number
     previewTrack: boolean
     previewQueue: boolean
+    currentSongInQueue: number
+    queue: {
+        playlistId?: number
+        playlistName?: string
+        tracks: ISong[]
+    } | null
 }
 
 const initialState: IAppState = {
-    track: {
-        id: '1',
-        name: 'Exit Sign',
-        artists: ['Hieuthuhai', 'Marcus'],
-        image: '/nadtt-canva.jpg',
-        duration: 0,
-        url: 'https://vnso-pt-8-tf-a128-z3.zmdcdn.me/7344b975eefcf8d39c675a8a7a2fe245?authen=exp=1746699419~acl=/7344b975eefcf8d39c675a8a7a2fe245*~hmac=500078ed44f7e27867a4daece13ca84a',
-    },
+    isShuffle: false,
+    track: null,
     isMuted: false,
     isPlaying: false,
     previewTrack: false,
     repeatMode: 'off',
     volume: 100,
+    currentSongInQueue: 0,
+
     previewQueue: false,
+    queue: null,
 }
 
 const appSlice = createSlice({
@@ -40,6 +38,16 @@ const appSlice = createSlice({
     reducers: {
         setIsPlaying(state, action) {
             state.isPlaying = action.payload
+        },
+        setTrack(state, action: PayloadAction<ISong>) {
+            const { payload } = action
+            if (state.track?.id === payload.id) {
+                state.isPlaying = !state.isPlaying
+                return
+            }
+            state.track = payload
+            state.isPlaying = true
+            state.previewTrack = true
         },
         setPreviewTrack(state, action) {
             state.previewTrack = action.payload
@@ -67,6 +75,24 @@ const appSlice = createSlice({
             const { payload } = action
             state.repeatMode = payload
         },
+        setQueue: (
+            state,
+            action: PayloadAction<{
+                playlistId?: number
+                playlistName?: string
+                track: ISong[]
+            }>
+        ) => {
+            state.queue = {
+                playlistId: action.payload.playlistId,
+                playlistName: action.payload.playlistName,
+                tracks: action.payload.track,
+            }
+        },
+        setIsShuffle: (state, action: PayloadAction<boolean>) => {
+            const { payload } = action
+            state.isShuffle = payload
+        },
     },
 })
 
@@ -77,5 +103,8 @@ export const {
     setPreviewTrack,
     setPreviewQueue,
     setRepeatMode,
+    setQueue,
+    setIsShuffle,
+    setTrack,
 } = appSlice.actions
 export const appReducer = appSlice.reducer

@@ -2,7 +2,9 @@
 
 import React from 'react'
 
+import { env } from '@/env.mjs'
 import { cn } from '@/lib/utils'
+import { useRedux } from '@/hooks/use-redux'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -24,11 +26,14 @@ import { Icons } from '../icons'
 import { Button } from '../ui/button'
 import { ResizablePanel } from '../ui/resizable'
 import { ScrollArea } from '../ui/scroll-area'
+import QueuePreview from './queue-preview'
 
 function TrackPreview({
     className,
     ...props
 }: React.ComponentProps<typeof ResizablePanel>) {
+    const { appSelector } = useRedux()
+    const { track } = appSelector((state) => state.app)
     const [scrolled, setScrolled] = React.useState(false)
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
         const scrollTop = e.currentTarget.scrollTop
@@ -50,7 +55,7 @@ function TrackPreview({
                         </button>
                         <div className="">
                             <p className="font-bold text-nowrap">
-                                Như cách anh đã từng thôi
+                                {track?.title}
                             </p>
                         </div>
                     </div>
@@ -76,15 +81,21 @@ function TrackPreview({
                 </div>
                 <div className="flex flex-col gap-4 px-4">
                     <div className="aspect-square max-w-[388px] overflow-hidden rounded-lg">
-                        <img className="w-full" src="/nadtt-canva.jpg" alt="" />
+                        <img
+                            className="w-full"
+                            src={`${env.NEXT_PUBLIC_MEDIA_URL}${track?.thumbnail}`}
+                            alt=""
+                        />
                     </div>
                     <div className="flex items-center justify-between gap-4">
                         <div className="overflow-hidden">
                             <p className="text-2xl leading-6 font-bold text-nowrap">
-                                Như Cách Anh Đã Từng Thôi
+                                {track?.title}
                             </p>
                             <span className="text-subdued text-[15px] leading-0 font-bold">
-                                HURRYKNG
+                                {track?.artist
+                                    .map((artist) => artist.name)
+                                    .join(', ')}
                             </span>
                         </div>
                         <div className="flex items-center">
@@ -106,7 +117,7 @@ function TrackPreview({
                         <div className="flex items-center justify-between">
                             <div className="flex flex-col">
                                 <p className="text-[15px] font-semibold">
-                                    HURRYKNG
+                                    {track?.artist[0].name}
                                 </p>
                                 <span className="text-subdued text-[13px] font-bold">
                                     Main Artist
@@ -116,7 +127,7 @@ function TrackPreview({
                                 Follow
                             </Button>
                         </div>
-                        <div className="flex items-center justify-between">
+                        {/* <div className="flex items-center justify-between">
                             <div className="flex flex-col">
                                 <p className="text-[15px] font-semibold">
                                     KADO
@@ -135,7 +146,7 @@ function TrackPreview({
                                     Producer
                                 </span>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                     <div className="bg-elevated-base flex flex-col gap-3 rounded-md p-4">
                         <p className="text-[15px] font-semibold">
